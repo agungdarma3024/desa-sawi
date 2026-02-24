@@ -1,12 +1,16 @@
-// Fungsi untuk memanggil kamus (perhatikan perubahan pada ../../)
+// Fungsi untuk memanggil kamus
 const getDictionary = async (lang: string) => {
   if (lang === 'en') return import('../../dictionaries/en.json').then((module) => module.default);
   return import('../../dictionaries/id.json').then((module) => module.default);
 };
 
-export default async function Home({ params }: { params: { lang: string } }) {
-  // Ambil data kamus berdasarkan bahasa di URL (params.lang)
-  const dict = await getDictionary(params.lang);
+// 1. Ubah tipe params menjadi Promise
+export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
+  // 2. Tambahkan await sebelum mengambil nilai lang
+  const { lang } = await params;
+
+  // Ambil data kamus berdasarkan bahasa di URL
+  const dict = await getDictionary(lang);
 
   return (
     <main className="relative w-full h-screen flex items-center justify-center overflow-hidden">
